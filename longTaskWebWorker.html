@@ -1,0 +1,41 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-02 20:52:40
+ * @LastEditTime: 2021-10-03 16:45:21
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /timeslicing/longTaskWebWorker.html
+-->
+<html>
+  <head>
+    <style>
+      @keyframes move {
+        from {
+          left: 0;
+        }
+        to {
+          left: 100%;
+        }
+      }
+      .move {
+        position: absolute;
+        animation: move 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="move">1234567890</div>
+    <script>
+    const worker = new Worker('./worker.js');
+    let start = performance.now();
+    console.log("开始");
+    worker.postMessage({ number: 0 });
+    
+    // 通过onmessage接收消息
+    worker.onmessage = function(e) {
+        console.log(e.data);
+        console.log("结束", `${(performance.now() - start) / 1000}s`);
+    };
+    </script>
+  </body>
+</html>

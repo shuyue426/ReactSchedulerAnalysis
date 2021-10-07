@@ -1,0 +1,68 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-02 20:52:40
+ * @LastEditTime: 2021-10-07 12:09:23
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /timeslicing/longTaskGenerate.html
+-->
+<html>
+  <head>
+    <style>
+      @keyframes move {
+        from {
+          left: 0;
+        }
+        to {
+          left: 100%;
+        }
+      }
+      .move {
+        position: absolute;
+        animation: move 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="move">1234567890</div>
+    <script>
+      let sum = 0;
+      // generator 处理原来的函数
+      function* fnc() {
+        const start = performance.now();
+        while (sum < 100) {
+          yield sum++;
+        }
+        console.log("结束", `${(performance.now() - start) / 1000}s`);
+        console.log(sum);
+
+        return sum;
+      }
+
+      function timeSlice(fnc) {
+        if (fnc.constructor.name !== "GeneratorFunction") return fnc();
+
+        return async function (...args) {
+          const fnc_ = fnc(...args);
+          let data;
+
+          do {
+            data = fnc_.next();
+            // 每执行一步就休眠，注册一个宏任务 setTimeout 来叫醒他
+            await new Promise((resolve) => setTimeout(resolve));
+          } while (!data.done);
+
+          return data.value;
+        };
+      }
+
+      setTimeout(async () => {
+        const fnc1 = timeSlice(fnc);
+        let start = performance.now();
+
+        console.log("开始");
+        const num = await fnc1();
+      }, 1000);
+    </script>
+  </body>
+</html>

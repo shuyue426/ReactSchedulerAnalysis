@@ -1,0 +1,67 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-02 20:52:40
+ * @LastEditTime: 2021-10-07 11:15:53
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /timeslicing/longTaskRAF.html
+-->
+<html>
+  <head>
+    <style>
+      @keyframes move {
+        from {
+          left: 0;
+        }
+        to {
+          left: 100%;
+        }
+      }
+      .move {
+        position: absolute;
+        animation: move 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="move">1234567890</div>
+    <script>
+      function fnc() {
+        let start = performance.now();
+        let sum = 0;
+        const loop = () => {
+          window.requestAnimationFrame(() => {
+            if (sum < 1000000000) {
+              let i = 0;
+              while (i < 10000000) {
+                sum++;
+                i++;
+              }
+              loop();
+            } else {
+              console.log(sum);
+              console.log("结束", `${(performance.now() - start) / 1000}s`);
+            }
+          });
+        };
+        window.requestAnimationFrame(loop);
+      }
+
+      setTimeout(() => {
+        console.log("开始");
+        fnc();
+      }, 1000);
+
+      // let i = 1;
+      // const test = () =>{
+      //   console.log(i,Date.now());
+      //   if(i<3){
+      //     i+= 1;
+      //     window.requestAnimationFrame(test);
+      //   }
+      // }
+
+      // window.requestAnimationFrame(test);
+    </script>
+  </body>
+</html>

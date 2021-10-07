@@ -1,0 +1,40 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-03 19:13:02
+ * @LastEditTime: 2021-10-03 19:53:22
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /timeslicing/eventloop.html
+-->
+<html></html>
+<body>
+  <script>
+    window.requestIdleCallback(() => {
+      console.log("requestIdleCallback");
+    });
+    var channel = new MessageChannel();
+    var port1 = channel.port1;
+    var port2 = channel.port2;
+    port1.onmessage = function (event) {
+      console.log("port1收到来自port2的数据：" + event.data);
+    };
+    function fnc() {
+      setTimeout(function () {
+        console.log("setTimeout");
+        port2.postMessage("发送给port1 1");
+        new Promise(function (resolve) {
+          console.log("promise2");
+        });
+      }, 0);
+
+      new Promise(function (resolve) {
+        console.log("promise1");
+      })
+
+      window.requestAnimationFrame(() => {
+        console.log("requestAnimationFrame");
+      });
+    }
+    fnc();
+  </script>
+</body>

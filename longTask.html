@@ -1,0 +1,45 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-10-02 20:52:40
+ * @LastEditTime: 2021-10-07 11:15:35
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /timeslicing/longTask.html
+-->
+<html>
+  <head>
+    <style>
+      @keyframes move {
+        from {
+          left: 0;
+        }
+        to {
+          left: 100%;
+        }
+      }
+      .move {
+        position: absolute;
+        animation: move 5s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="move">1234567890</div>
+    <script>
+      function fnc() {
+        let start = performance.now();
+        let sum = 0;
+        while (sum < 1000000000) {
+          sum++;
+        }
+        console.log(sum);
+        console.log("结束", `${(performance.now() - start) / 1000}s`);
+      }
+
+      setTimeout(() => {
+        console.log("开始");
+        fnc();       
+      }, 1000);
+    </script>
+  </body>
+</html>
